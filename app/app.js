@@ -12,33 +12,32 @@ export default class App extends EventEmitter {
   constructor() {
     super();
     this.username = null;
-  }
-
-  start() {
-    const rl = readline.createInterface({
+    this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
       prompt: '> '
-    })
+    });
+  }
 
+  start() {
     this.username = getName();
     if (!this.username) {
       printSuggestToEnterName();
     } else {
       printWelcomeMessage(this.username);
       printCurrentPath();
-      rl.prompt();
+      this.rl.prompt();
     }
 
-    rl.on('SIGINT', () => {
-      rl.close();
+    this.rl.on('SIGINT', () => {
+      this.rl.close();
       printExitMessage();
     })
 
-    rl.on('line', (line) => {
+    this.rl.on('line', (line) => {
       const data = line.trim();
       if (line === '.exit') {
-        rl.close();
+        this.rl.close();
         printExitMessage(this.username);
         return;
       }
@@ -46,7 +45,7 @@ export default class App extends EventEmitter {
         this.username = data;
         printWelcomeMessage(this.username);
         printCurrentPath();
-        rl.prompt();
+        this.rl.prompt();
       } else if (!data) {
         printErrorMessage();
         printSuggestToEnterName();
@@ -56,8 +55,11 @@ export default class App extends EventEmitter {
           this.emit(parsedCommand.command, parsedCommand.arguments);
         }
       }
-      rl.prompt()
     })
+  }
+
+  setPrompt() {
+    this.rl.prompt();
   }
   on(event, callback) {
     return super.on(event, callback);

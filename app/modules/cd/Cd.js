@@ -1,5 +1,8 @@
 import path from 'path';
 import { pathController } from "../../index.js";
+import {checkNewPath} from "../../../utils/checkNewPath.js";
+import {printFailMessage} from "../../../utils/printFailMessage.js";
+import {printCurrentPath} from "../../../utils/printCurrentPath.js";
 
 export default class Cd {
   constructor(app) {
@@ -8,7 +11,12 @@ export default class Cd {
       this.back();
     })
     this.app.on('cd', (args) => {
-      // test
+      if (args.length) {
+        this.changePath(args.join(' '));
+      } else {
+        printFailMessage();
+        printCurrentPath();
+      }
     });
   }
 
@@ -17,5 +25,17 @@ export default class Cd {
     const currentPath = pathController.getCurrentPath();
     const newPath = path.join(currentPath, '..', separator);
     pathController.changePath(newPath);
+  }
+
+  async changePath(pathToChange) {
+    const currentPath = pathController.getCurrentPath();
+    const newPath = path.resolve(currentPath, pathToChange);
+    const checkResult = await checkNewPath(newPath);
+    if (checkResult) {
+      pathController.changePath(newPath);
+    } else {
+      printCurrentPath();
+    }
+    this.app.setPrompt();
   }
 }
