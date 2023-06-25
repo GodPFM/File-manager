@@ -46,13 +46,16 @@ export default class App extends EventEmitter {
         printWelcomeMessage(this.username);
         printCurrentPath();
         this.rl.prompt();
-      } else if (!data) {
+      } else if (!this.username && !data) {
         printErrorMessage();
         printSuggestToEnterName();
       } else {
         const parsedCommand = parseArgs(line);
         if (parsedCommand) {
           this.emit(parsedCommand.command, parsedCommand.arguments);
+        } else {
+          printCurrentPath();
+          this.rl.prompt();
         }
       }
     })
