@@ -30,7 +30,13 @@ export default class Cd {
 
   async changePath(pathToChange) {
     const currentPath = pathController.getCurrentPath();
-    const newPath = path.resolve(currentPath, pathToChange);
+    let newPath = '';
+    const isAbsolute = path.isAbsolute(pathToChange);
+    if (isAbsolute) {
+      newPath = pathToChange;
+    } else {
+      newPath = path.resolve(currentPath, pathToChange)
+    }
     const checkResult = await checkNewPath(newPath);
     if (checkResult) {
       pathController.changePath(newPath);
