@@ -25,6 +25,7 @@ export default class Cd {
     const currentPath = pathController.getCurrentPath();
     const newPath = path.join(currentPath, '..', separator);
     pathController.changePath(newPath);
+    this.app.setPrompt();
   }
 
   async changePath(pathToChange) {
