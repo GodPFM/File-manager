@@ -1,10 +1,22 @@
-export const parseArgs = () => {
-  const args = process.argv;
-  let result = '';
-  args.forEach((item, index) => {
-    if (item.startsWith('--') && item.includes('username=') && !result) {
-      result += item.replace('--username=', '');
+import {printErrorMessage} from "./printErrorMessage.js";
+
+const commands = ['cd', 'up']
+
+export const parseArgs = (line) => {
+  const commandWithArguments = line.split(' ').filter((item) => item !== '');
+  if (!commands.includes(commandWithArguments[0])) {
+    printErrorMessage();
+    return null;
+  }
+  return  commandWithArguments.reduce((acc, item, index) => {
+    if (index === 0) {
+      acc.command = item;
+    } else {
+      acc.arguments.push(item);
     }
-  });
-  return result;
-};
+    return acc;
+  }, {
+    command: null,
+    arguments: [],
+  })
+}

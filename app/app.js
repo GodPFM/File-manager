@@ -1,12 +1,16 @@
 import readline from "readline";
-import { parseArgs } from "../utils/parseArgs.js";
+import EventEmitter from 'events'
+import { getName } from "../utils/getName.js";
 import { printWelcomeMessage } from "../utils/printWelcomeMessage.js";
 import { printExitMessage } from "../utils/printExitMessage.js";
 import { printSuggestToEnterName } from "../utils/printSuggestToEnterName.js";
 import { printErrorMessage } from "../utils/printErrorMessage.js";
+import { printCurrentPath } from "../utils/printCurrentPath.js";
+import { parseArgs } from "../utils/parseArgs.js";
 
-export default class App {
+export default class App extends EventEmitter {
   constructor() {
+    super();
     this.username = null;
   }
 
@@ -17,11 +21,12 @@ export default class App {
       prompt: '> '
     })
 
-    this.username = parseArgs();
+    this.username = getName();
     if (!this.username) {
       printSuggestToEnterName();
     } else {
       printWelcomeMessage(this.username);
+      printCurrentPath();
       rl.prompt();
     }
 
@@ -40,11 +45,25 @@ export default class App {
       if (!this.username && data) {
         this.username = data;
         printWelcomeMessage(this.username);
+        printCurrentPath();
         rl.prompt();
       } else if (!data) {
         printErrorMessage();
         printSuggestToEnterName();
+      } else {
+        const parsedCommand = parseArgs(line);
+        if (parsedCommand) {
+          this.emit(parsedCommand.command, parsedCommand.arguments);
+        }
       }
+      rl.prompt()
     })
+  }
+  on(event, callback) {
+    return super.on(event, callback);
+  }
+
+  emit(event, arg) {
+    return super.emit(event, arg);
   }
 }
