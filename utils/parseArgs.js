@@ -1,6 +1,6 @@
 import {printErrorMessage} from "./printErrorMessage.js";
 
-const commands = ['cd', 'up', 'ls', 'cat', 'add', 'rn'];
+const commands = ['cd', 'up', 'ls', 'cat', 'add', 'rn', 'cp'];
 
 export const parseArgs = (line) => {
   const commandWithArguments = line.split(' ').filter((item) => item !== '');

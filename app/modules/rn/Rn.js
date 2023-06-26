@@ -16,7 +16,7 @@ export default class Rn {
 
   renameFile(pathToFile, newName) {
     const solvedPathToFile = getCurrentPath(pathToFile);
-    let nameToChange = ''
+    let nameToChange = '';
     if (path.isAbsolute(newName)) {
       nameToChange = newName
     } else {

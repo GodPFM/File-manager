@@ -31,7 +31,7 @@ export default class App extends EventEmitter {
 
     this.rl.on('SIGINT', () => {
       this.rl.close();
-      printExitMessage();
+      printExitMessage(this.username);
     })
 
     this.rl.on('line', (line) => {
