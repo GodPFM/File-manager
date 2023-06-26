@@ -3,6 +3,7 @@ import { pathController } from "../../index.js";
 import {checkNewPath} from "../../../utils/checkNewPath.js";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
+import {getCurrentPath} from "../../../utils/getCurrentPath.js";
 
 export default class Cd {
   constructor(app) {
@@ -29,14 +30,7 @@ export default class Cd {
   }
 
   async changePath(pathToChange) {
-    const currentPath = pathController.getCurrentPath();
-    let newPath = '';
-    const isAbsolute = path.isAbsolute(pathToChange);
-    if (isAbsolute) {
-      newPath = pathToChange;
-    } else {
-      newPath = path.resolve(currentPath, pathToChange)
-    }
+    let newPath = getCurrentPath(pathToChange);
     const checkResult = await checkNewPath(newPath);
     if (checkResult) {
       pathController.changePath(newPath);

@@ -3,6 +3,7 @@ import path from 'path';
 import fs from "fs";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
+import {getCurrentPath} from "../../../utils/getCurrentPath.js";
 
 export default class Cat {
   constructor(app) {
@@ -13,15 +14,7 @@ export default class Cat {
   }
 
   catFile(pathToFile) {
-    const currentPath = pathController.getCurrentPath();
-    let filePath = '';
-    const isAbsolute = path.isAbsolute(pathToFile)
-    if (isAbsolute) {
-      filePath = pathToFile;
-    } else {
-      filePath = path.resolve(currentPath, pathToFile);
-    }
-    console.log(filePath);
+    let filePath = getCurrentPath(pathToFile);
     const readStream = fs.createReadStream(filePath);
     readStream.on('error', () => {
       printFailMessage();

@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
+import {getCurrentPath} from "../../../utils/getCurrentPath.js";
 
 export default class Add {
   constructor(app) {
@@ -13,13 +14,7 @@ export default class Add {
   }
 
   addNewFile(name) {
-    const currentPath = pathController.getCurrentPath();
-    let pathToFile = '';
-    if (path.isAbsolute(name)) {
-      pathToFile = name
-    } else {
-      pathToFile = path.resolve(currentPath, name);
-    }
+    let pathToFile = getCurrentPath(name);
     fs.writeFile(pathToFile, '', (err) => {
       if (err) {
         printFailMessage();
