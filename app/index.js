@@ -6,6 +6,7 @@ import Cat from "./modules/cat/Cat.js";
 import Add from "./modules/add/Add.js";
 import Rn from "./modules/rn/Rn.js";
 import Cp from "./modules/cp/Cp.js";
+import Rm from "./modules/rm/Rm.js";
 
 const pathController = new PathController();
 const app = new App();
@@ -15,6 +16,7 @@ const cat = new Cat(app);
 const add = new Add(app);
 const rn = new Rn(app);
 const cp = new Cp(app);
+const rm = new Rm(app);
 
 app.start();
 
