@@ -8,6 +8,8 @@ import Rn from "./modules/rn/Rn.js";
 import Cp from "./modules/cp/Cp.js";
 import Rm from "./modules/rm/Rm.js";
 import Mv from "./modules/mv/Mv.js";
+import Os from './modules/os/Os.js';
+import Hash from "./modules/hash/Hash.js";
 
 const pathController = new PathController();
 const app = new App();
@@ -19,6 +21,8 @@ const rn = new Rn(app);
 const cp = new Cp(app);
 const rm = new Rm(app);
 const mv = new Mv(app);
+const os = new Os(app);
+const hash = new Hash(app);
 
 app.start();
 
