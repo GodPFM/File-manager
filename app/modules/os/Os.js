@@ -70,7 +70,7 @@ export default class Os {
   }
 
   getUsername() {
-    const username = this.app.username;
+    const username = os.userInfo().username;
     process.stdout.write(`Username is ${username}\n`);
     this.printCompleteMessage()
   }
