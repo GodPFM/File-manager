@@ -17,19 +17,18 @@ export default class Rm {
 
   async removeFile(pathToFile) {
     const solvedPath = getCurrentPath(pathToFile);
-    const file = await fs.stat(solvedPath, (err) => {
-      if (err) {
+    try {
+      const file = await fs.stat(solvedPath, (err) => {
+        if (err) {
+          printFailMessage();
+        }
+      })
+      if (file.isFile()) {
+        await fs.unlink(solvedPath)
+      } else {
         printFailMessage();
-        printCurrentPath();
-        this.app.setPrompt();
       }
-    })
-    if (file.isFile()) {
-      await fs.unlink(solvedPath)
-      process.stdout.write(`${path.basename(pathToFile)} deleted\n`);
-      printCurrentPath();
-      this.app.setPrompt();
-    } else {
+    } catch {
       printFailMessage();
       printCurrentPath();
       this.app.setPrompt();

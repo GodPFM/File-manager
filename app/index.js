@@ -7,6 +7,7 @@ import Add from "./modules/add/Add.js";
 import Rn from "./modules/rn/Rn.js";
 import Cp from "./modules/cp/Cp.js";
 import Rm from "./modules/rm/Rm.js";
+import Mv from "./modules/mv/Mv.js";
 
 const pathController = new PathController();
 const app = new App();
@@ -17,6 +18,7 @@ const add = new Add(app);
 const rn = new Rn(app);
 const cp = new Cp(app);
 const rm = new Rm(app);
+const mv = new Mv(app);
 
 app.start();
 
