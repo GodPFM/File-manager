@@ -10,7 +10,7 @@ export default class Mv {
   constructor(app) {
     this.app = app;
     this.app.on('mv', (args) => {
-      if (args.length >= 2) {
+      if (args.length === 2) {
         const pathToFile = args.shift();
         const pathToDest = args.shift();
         this.moveFile(pathToFile, pathToDest);

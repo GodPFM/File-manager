@@ -4,13 +4,20 @@ import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
 import crypto from 'crypto';
 import path from "path";
+import {printErrorMessage} from "../../../utils/printErrorMessage.js";
 
 export default class Hash {
   constructor(app) {
     this.app = app;
     this.app.on('hash', (args) => {
-      const pathToFile = args.join(' ');
-      this.calculateHash(pathToFile);
+      if (args.length === 1) {
+        const pathToFile = args.join(' ');
+        this.calculateHash(pathToFile);
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
+      }
     })
   }
 

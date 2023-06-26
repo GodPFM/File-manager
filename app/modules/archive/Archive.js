@@ -12,18 +12,26 @@ export default class Archive {
   constructor(app) {
     this.app = app;
     this.app.on('compress', (args) => {
-      if (args.length >= 2) {
+      if (args.length === 2) {
         const pathToFile = args.shift();
         const dest = args.shift();
         this.compress(pathToFile, dest);
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
       }
     })
 
     this.app.on('decompress', (args) => {
-      if (args.length >= 2) {
+      if (args.length === 2) {
         const pathToFile = args.shift();
         const dest = args.shift();
         this.decompress(pathToFile, dest);
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
       }
     })
   }
@@ -36,21 +44,28 @@ export default class Archive {
     } else {
       destPath = path.resolve(pathController.getCurrentPath(), pathToDest);
     }
-    const fileInformation = await fsp.stat(currentPath);
-    if (!fileInformation.isFile()) {
-      printErrorMessage();
-    } else {
-      const brotli = zlib.createBrotliCompress();
-      const readStream = fs.createReadStream(currentPath);
-      const writeStream = fs.createWriteStream(path.resolve(destPath, path.basename(pathToFile + '.gz')));
+    try {
+      const fileInformation = await fsp.stat(currentPath);
+      const isArchive = path.extname(path.basename(pathToFile)) === '.gz';
+      if (!fileInformation.isFile() || isArchive) {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
+      } else {
+        const brotli = zlib.createBrotliCompress();
+        const readStream = fs.createReadStream(currentPath);
+        const writeStream = fs.createWriteStream(path.resolve(destPath, path.basename(pathToFile + '.gz')));
 
-      readStream.on('error', this.streamError)
-      writeStream.on('error', this.streamError)
-      readStream.pipe(brotli).pipe(writeStream);
-      writeStream.on('finish', () => {
-        process.stdout.write('Compress completed');
-        this.streamSuccess();
-      })
+        readStream.on('error', this.streamError)
+        writeStream.on('error', this.streamError)
+        readStream.pipe(brotli).pipe(writeStream);
+        writeStream.on('finish', () => {
+          process.stdout.write('Compress completed\n');
+          this.streamSuccess();
+        })
+      }
+    } catch {
+      this.streamError();
     }
   }
 

@@ -3,14 +3,21 @@ import fs from "fs";
 import path from "path";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
+import {printErrorMessage} from "../../../utils/printErrorMessage.js";
 
 export default class Rn {
   constructor(app) {
     this.app = app;
     this.app.on('rn', (args) => {
-      const pathToFile = args.shift();
-      const name = args.join(' ');
-      this.renameFile(pathToFile, name);
+      if (args.length === 2) {
+        const pathToFile = args.shift();
+        const name = args.join(' ');
+        this.renameFile(pathToFile, name);
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
+      }
     })
   }
 

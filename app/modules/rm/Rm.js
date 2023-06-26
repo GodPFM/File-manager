@@ -3,14 +3,19 @@ import fs from "fs/promises";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
 import path from "path";
+import {printErrorMessage} from "../../../utils/printErrorMessage.js";
 
 export default class Rm {
   constructor(app) {
     this.app = app;
     this.app.on('rm', async (args) => {
-      if (args.length) {
+      if (args.length === 1) {
         const pathToFile = args.shift();
         await this.removeFile(pathToFile);
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
       }
     })
   }
@@ -25,6 +30,9 @@ export default class Rm {
       })
       if (file.isFile()) {
         await fs.unlink(solvedPath)
+        process.stdout.write('File removed\n');
+        printCurrentPath();
+        this.app.setPrompt();
       } else {
         printFailMessage();
       }

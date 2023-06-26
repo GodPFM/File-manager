@@ -2,12 +2,13 @@ import os from "os";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
 import {pathController} from "../../index.js";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
+import {printErrorMessage} from "../../../utils/printErrorMessage.js";
 
 export default class Os {
   constructor(app) {
     this.app = app;
     this.app.on('os', (args) => {
-      if (args.length) {
+      if (args.length === 1) {
         const filteredArgument = args.filter((item) => item.includes('--'));
         if (filteredArgument) {
           const command = filteredArgument.shift();
@@ -28,13 +29,20 @@ export default class Os {
               this.getArch()
               break;
             default:
-              printFailMessage();
-              printCurrentPath();
-              this.app.setPrompt();
+              printErrorMessage();
+              this.printErrorMessage();
           }
         }
+      } else {
+        printErrorMessage();
+        this.printErrorMessage();
       }
     })
+  }
+
+  printErrorMessage() {
+    printCurrentPath();
+    this.app.setPrompt();
   }
 
   getEOL() {

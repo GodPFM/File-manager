@@ -4,12 +4,19 @@ import fs from "fs";
 import {printFailMessage} from "../../../utils/printFailMessage.js";
 import {printCurrentPath} from "../../../utils/printCurrentPath.js";
 import {getCurrentPath} from "../../../utils/getCurrentPath.js";
+import {printErrorMessage} from "../../../utils/printErrorMessage.js";
 
 export default class Cat {
   constructor(app) {
     this.app = app;
     this.app.on('cat', (arg) => {
-      this.catFile(arg.join(' '))
+      if (arg.length === 1) {
+        this.catFile(arg.join(' '))
+      } else {
+        printErrorMessage();
+        printCurrentPath();
+        this.app.setPrompt();
+      }
     })
   }
 
@@ -22,7 +29,7 @@ export default class Cat {
       this.app.setPrompt();
     })
     readStream.on('data', (data) => {
-      process.stdout.write(data);
+      process.stdout.write(data + '\n');
       printCurrentPath();
       this.app.setPrompt();
     });
